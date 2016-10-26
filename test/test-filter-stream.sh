@@ -41,8 +41,8 @@ begin_test "filter stream: checking out a branch"
 
   pushd ..
     git clone \
-      -c "filter.lfs.smudge=" \   # Unset
-      -c "filter.lfs.required=" \ # Unset
+      -c "filter.lfs.smudge=cat" \   # Unset
+      -c "filter.lfs.required=false" \ # Unset
       "$GITSERVER/$reponame" "$reponame-assert"
 
     cd "$reponame-assert"
