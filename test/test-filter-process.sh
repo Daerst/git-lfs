@@ -48,9 +48,6 @@ begin_test "filter process: checking out a branch"
 
     cd "$reponame-assert"
 
-    # Make sure that we have all of the branches
-    git fetch --all
-
     # Assert that we are on the master branch, and have a.dat
     [ "master" = "$(git rev-parse --abbrev-ref HEAD)" ]
     [ "$contents_a" = "$(cat a.dat)" ]
