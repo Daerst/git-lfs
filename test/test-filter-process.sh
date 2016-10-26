@@ -3,17 +3,17 @@
 . "test/testlib.sh"
 
 if [ "$GIT_LFS_USE_LEGACY_FILTER" == "1" ]; then
-  echo "skip: $0 (filter stream disabled)"
+  echo "skip: $0 (filter process disabled)"
   exit
 fi
 
 ensure_git_version_isnt $VERSION_LOWER "2.10.0"
 
-begin_test "filter stream: checking out a branch"
+begin_test "filter process: checking out a branch"
 (
   set -e
 
-  reponame="filter_stream_checkout"
+  reponame="filter_process_checkout"
   setup_remote_repo "$reponame"
   clone_repo "$reponame" repo
 
