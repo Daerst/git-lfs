@@ -88,7 +88,7 @@ func (o *ObjectScanner) NegotiateCapabilities() error {
 
 type Request struct {
 	Header  map[string]string
-	Payload []byte
+	Payload io.Reader
 }
 
 func (o *ObjectScanner) Scan() bool {
@@ -137,27 +137,14 @@ func (o *ObjectScanner) readRequest() (*Request, error) {
 	}
 
 	req := &Request{
-		Header: make(map[string]string),
+		Header:  make(map[string]string),
+		Payload: &packetReader{proto: o.p},
 	}
 
 	for _, pair := range requestList {
 		v := strings.Split(pair, "=")
 		req.Header[v[0]] = v[1]
 	}
-
-	for {
-		chunk, err := o.p.readPacket()
-		if err != nil {
-			// TODO: should we check the err of this call, to?!
-			o.WriteStatus("error")
-			return nil, err
-		}
-		if len(chunk) == 0 {
-			break
-		}
-		req.Payload = append(req.Payload, chunk...) // probably more efficient way?!
-	}
-	o.WriteStatus("success")
 
 	return req, nil
 }
