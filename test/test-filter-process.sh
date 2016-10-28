@@ -16,7 +16,7 @@ fi
 # ```
 # ensure_git_version_isnt $VERSION_LOWER "2.11.0"
 # ```
-if [ 1 -ne "$(grep -c "g" "$(git verison | cut -d ' ' -f 2)")" ]; then
+if [ "1" -ne "$(grep -c "g" "$(git verison | cut -d ' ' -f 2)")" ]; then
   echo "skip: $0 git version does not include support for filter protocol"
   exit
 fi
