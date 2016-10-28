@@ -133,30 +133,6 @@ func TestObjectScannerRejectsInvalidHeaderPackets(t *testing.T) {
 	assert.Nil(t, req)
 }
 
-func TestObjectScannerRejectsInvalidPayloadPackets(t *testing.T) {
-	var from, to bytes.Buffer
-
-	proto := newProtocolRW(nil, &from)
-	// Headers
-	require.Nil(t, proto.writePacketList([]string{
-		"foo=bar", "other=woot",
-	}))
-	// Multi-line (invalid) packet
-	require.Nil(t, proto.writePacketText("first"))
-	require.Nil(t, proto.writePacketText("second"))
-	require.Nil(t, proto.writePacket([]byte{})) // <-
-
-	req, err := readRequest(NewObjectScanner(&from, &to))
-
-	require.NotNil(t, err)
-	assert.Equal(t, "Invalid packet length.", err.Error())
-	assert.Nil(t, req)
-
-	resp, err := newProtocolRW(&to, nil).readPacketList()
-	assert.Nil(t, err)
-	assert.Equal(t, []string{"status=error"}, resp)
-}
-
 func TestObjectScannerWritesResponsesInOneChunk(t *testing.T) {
 	var buf bytes.Buffer
 
