@@ -7,7 +7,19 @@ if [ "$GIT_LFS_USE_LEGACY_FILTER" == "1" ]; then
   exit
 fi
 
-ensure_git_version_isnt $VERSION_LOWER "2.10.0"
+# HACK(taylor): git uses ".g<hash>" in the version name to signal that it is
+# from the "next" branch, which is the only (current) version of Git that has
+# support for the filter protocol.
+#
+# Once 2.11 is released, replace this with:
+#
+# ```
+# ensure_git_version_isnt $VERSION_LOWER "2.11.0"
+# ```
+if [ 1 -ne "$(grep -c "g" "$(git verison | cut -d ' ' -f 2)")" ]; then
+  echo "skip: $0 git version does not include support for filter protocol"
+  exit
+fi
 
 begin_test "filter process: checking out a branch"
 (
